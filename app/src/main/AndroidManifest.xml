@@ -15,10 +15,42 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".PlayWithAIActivity" />
-        <activity android:name=".PlayWithFriendActivity" />
-        <activity android:name=".HowToPlayActivity" />
-        <activity android:name=".SettingsActivity"></activity>
+
+        <activity
+            android:name=".PlayWithAIActivity"
+            android:label="@string/ai_button"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"  />
+        </activity>
+
+        <activity android:name=".PlayWithFriendActivity"
+            android:label="@string/friend_button"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"  />
+        </activity>
+
+        <activity
+            android:name=".HowToPlayActivity"
+            android:label="@string/how_to_play_button"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"  />
+        </activity>
+
+
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/settings_button"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"  />
+        </activity>
     </application>
 
 </manifest>

@@ -6,6 +6,10 @@
     <string name="settings_button">Settings</string>
     <string name="how_to_play_button">How to play</string>
 
+    <string name="grid_size">Grid size: </string>
+    <string name="number_mines">Number of mines: </string>
+
     <string name="how_to_play_title">How to play:</string>
     <string name="instructions">Instructions here</string>
+
 </resources>

@@ -1,0 +1,2 @@
+# minesweeper-flags
+README placeholder

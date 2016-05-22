@@ -3,11 +3,12 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.vdai.minesweeperflags.GameBoardGridView
+    <GridView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:stretchMode="columnWidth"
         android:id="@+id/game_board">
-    </com.vdai.minesweeperflags.GameBoardGridView>
+    </GridView>
 
 
     <LinearLayout

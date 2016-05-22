@@ -1,5 +1,7 @@
 package com.vdai.minesweeperflags;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -7,12 +9,26 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+
 /**
  * Created by Vivian on 2016-05-22.
  */
 public class GameScreenActivity extends AppCompatActivity {
+    private int DEFAULT_GRID_SIZE = 15;
+    private int DEFAULT_NUM_MINES = 51;
 
-    public GameBoardGridView gameBoard;
+    public int gridSize;
+    public int totalSize;
+    public int numMines;
+    public List<Tile> tilesView = new ArrayList<>();
+    public List<Tile> tilesActual = new ArrayList<>();
+    public List<Integer> mines = new ArrayList<>();
+
+    public GridView gameBoard;
     public GameBoardAdapter gameBoardAdapter;
 
     @Override
@@ -26,16 +42,91 @@ public class GameScreenActivity extends AppCompatActivity {
 
 
     public void createGrid() {
-        gameBoard = (GameBoardGridView) findViewById(R.id.game_board);
+        SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+        gridSize = sharedPreferences.getInt(Integer.toString(R.string.grid_size_key), DEFAULT_GRID_SIZE);
+        numMines = sharedPreferences.getInt(Integer.toString(R.string.num_mines_key), DEFAULT_NUM_MINES);
+        totalSize = gridSize * gridSize;
+
+        for(int i = 0; i < totalSize; i++) {
+            Tile tile = new Tile();
+            tilesView.add(tile);
+            tilesActual.add(tile);
+        }
+
+        populateGrid();
+
+        gameBoard = (GridView) findViewById(R.id.game_board);
+
+        gameBoard.setNumColumns(gridSize);
+
         gameBoardAdapter = new GameBoardAdapter(this);
         gameBoard.setAdapter(gameBoardAdapter);
 
         gameBoard.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                changeTile(position);
                 Toast.makeText(GameScreenActivity.this, "Position of click is: " + position, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    // populates mines list with the indices of the tiles that have mines, in numerical order
+    public void generateMines() {
+        List<Integer> allNums = new ArrayList<>();
+        for(int i = 0; i < totalSize; i++) {
+            allNums.add(new Integer(i));
+        }
+        Collections.shuffle(allNums);
+
+        for(int j = 0; j < numMines; j++) {
+            int position = allNums.get(j);
+            mines.add(position);
+            tilesActual.get(position).putMine();
+        }
+        Collections.sort(mines);
+    }
+
+    // populate tilesActual with number tiles that represent the number of adjacent mines
+    public void generateNumbers() {
+        for(int i = 0; i < totalSize; i++) {
+            if(tilesActual.get(i).getMine()) continue;
+
+            int mineCounter = 0;
+
+            int checkPosition;
+
+            checkPosition = i - gridSize - 1;
+            for(int j = checkPosition; j < checkPosition + 3; j++) {
+                if(j >= 0 && j < totalSize && tilesActual.get(j).getMine()) mineCounter++;
+            }
+
+            checkPosition = i + gridSize - 1;
+            for(int j = checkPosition; j < checkPosition + 3; j++) {
+                if(j >= 0 && j < totalSize && tilesActual.get(j).getMine()) mineCounter++;
+            }
+
+            checkPosition = i - 1;
+            if(checkPosition >= 0 && checkPosition < totalSize && tilesActual.get(checkPosition).getMine()) mineCounter++;
+
+            checkPosition = i + 1;
+            if(checkPosition >= 0 && checkPosition < totalSize && tilesActual.get(checkPosition).getMine()) mineCounter++;
+
+            tilesActual.get(i).setState(mineCounter);
+
+        }
+    }
+
+    public void populateGrid() {
+        generateMines();
+        generateNumbers();
+    }
+
+    public void changeTile(int position) {
+        if(tilesView.get(position).getState().equals("unrevealed")) {
+            gameBoardAdapter.addToChangedTiles(position);
+            gameBoardAdapter.notifyDataSetChanged();
+        }
     }
 
 }

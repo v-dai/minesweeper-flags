@@ -5,6 +5,7 @@ import android.app.backup.SharedPreferencesBackupHelper;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,28 +21,12 @@ import java.util.List;
 public class GameBoardAdapter extends BaseAdapter {
 
     private GameScreenActivity activity;
-    private int gridSize;
-    private int DEFAULT_GRID_SIZE = 15;
-    private List<Tile> tiles = new ArrayList<>();
-    private int tileSize;
+
     private LayoutInflater layoutInflater;
     private List<Integer> changedTiles = new ArrayList<>();
 
     public GameBoardAdapter(GameScreenActivity activity) {
         this.activity = activity;
-
-        SharedPreferences sharedPreferences = activity.getPreferences(Context.MODE_PRIVATE);
-        gridSize = sharedPreferences.getInt(Integer.toString(R.string.grid_size_key), DEFAULT_GRID_SIZE);
-        activity.gameBoard.setNumColumns(gridSize);
-
-        for(int i = 0; i < gridSize; i++) {
-            Tile tile = new Tile();
-            tiles.add(tile);
-        }
-
-        tileSize = activity.gameBoard.getWidth() / gridSize;
-
-        activity.gameBoard.onMeasure(tileSize, tileSize);
 
         layoutInflater = activity.getLayoutInflater();
 
@@ -52,11 +37,11 @@ public class GameBoardAdapter extends BaseAdapter {
     }
 
     public int getCount() {
-        return gridSize * gridSize;
+        return activity.gridSize * activity.gridSize;
     }
 
     public Tile getItem(int position) {
-        return tiles.get(position);
+        return activity.tilesView.get(position);
     }
 
     public long getItemId(int position) {
@@ -74,7 +59,8 @@ public class GameBoardAdapter extends BaseAdapter {
         }
 
         if(convertView != null && changedTiles.contains(position)) {
-            Tile tile = tiles.get(position);
+            Tile tile = activity.tilesActual.get(position);
+            changedTiles.remove(position);
             String state = tile.getState();
             if (state.equals("revealed")) {
                 setNumberImage(imageView, tile.getNumber());
@@ -82,6 +68,7 @@ public class GameBoardAdapter extends BaseAdapter {
                 setFlagImage(imageView, tile.getFlagColor());
             }
         }
+
         return imageView;
     }
 

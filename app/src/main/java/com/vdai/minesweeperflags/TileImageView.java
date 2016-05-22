@@ -16,8 +16,7 @@ public class TileImageView extends ImageView {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        getLayoutParams().height = getMeasuredWidth();
+        super.onMeasure(widthMeasureSpec, widthMeasureSpec);
 
     }
 

@@ -6,6 +6,7 @@ package com.vdai.minesweeperflags;
 public class Tile {
     private String state; // flagged, revealed, unrevealed
     private int number = 0;
+    private boolean mine = false;
     private String flagColor = null;
 
     public Tile() {
@@ -22,12 +23,20 @@ public class Tile {
         this.flagColor = flagColor;
     }
 
+    public void putMine() {
+        mine = true;
+    }
+
     public String getState() {
         return state;
     }
 
     public int getNumber() {
         return number;
+    }
+
+    public boolean getMine() {
+        return mine;
     }
 
     public String getFlagColor() {

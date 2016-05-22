@@ -40,6 +40,9 @@ public class GameBoardAdapter extends BaseAdapter {
         }
 
         tileSize = activity.gameBoard.getWidth() / gridSize;
+
+        activity.gameBoard.onMeasure(tileSize, tileSize);
+
         layoutInflater = activity.getLayoutInflater();
 
     }
@@ -61,13 +64,13 @@ public class GameBoardAdapter extends BaseAdapter {
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
-        ImageView imageView;
+        TileImageView imageView;
 
         if(convertView == null) {
-            imageView = (ImageView) layoutInflater.inflate(R.layout.grid_tile, null).findViewById(R.id.tile);
+            imageView = (TileImageView) layoutInflater.inflate(R.layout.grid_tile, null).findViewById(R.id.tile);
             imageView.setImageResource(R.drawable.square_unrevealed);
         } else {
-            imageView = (ImageView) convertView;
+            imageView = (TileImageView) convertView;
         }
 
         if(convertView != null && changedTiles.contains(position)) {

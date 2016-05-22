@@ -12,7 +12,7 @@ import android.widget.Toast;
  */
 public class GameScreenActivity extends AppCompatActivity {
 
-    public GridView gameBoard;
+    public GameBoardGridView gameBoard;
     public GameBoardAdapter gameBoardAdapter;
 
     @Override
@@ -26,7 +26,7 @@ public class GameScreenActivity extends AppCompatActivity {
 
 
     public void createGrid() {
-        gameBoard = (GridView) findViewById(R.id.game_board);
+        gameBoard = (GameBoardGridView) findViewById(R.id.game_board);
         gameBoardAdapter = new GameBoardAdapter(this);
         gameBoard.setAdapter(gameBoardAdapter);
 

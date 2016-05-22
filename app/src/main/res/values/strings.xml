@@ -12,4 +12,13 @@
     <string name="how_to_play_title">How to play:</string>
     <string name="instructions">Instructions here</string>
 
+    <string name="mines_left">Mines left: </string>
+    <string name="red_score">Red score: </string>
+    <string name="blue_score">Blue score: </string>
+    <string name="starting_score">0</string>
+
+    <string name="grid_size_key">size</string>
+    <string name="num_mines_key">mines</string>
+    <string name="ai_difficulty_key">ai</string>
+
 </resources>

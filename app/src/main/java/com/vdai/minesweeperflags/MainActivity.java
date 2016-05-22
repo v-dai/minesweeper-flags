@@ -14,6 +14,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void playWithAI(View view) {
+        Intent intent = new Intent(this, PlayWithAIActivity.class);
+        startActivity(intent);
 
     }
 

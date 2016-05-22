@@ -24,12 +24,17 @@ public class GameBoardAdapter extends BaseAdapter {
 
     private LayoutInflater layoutInflater;
     private List<Integer> changedTiles = new ArrayList<>();
+    private String playerColor = "red"; // placeholder
 
     public GameBoardAdapter(GameScreenActivity activity) {
         this.activity = activity;
 
         layoutInflater = activity.getLayoutInflater();
 
+    }
+
+    public List<Integer> getChangedTiles() {
+        return changedTiles;
     }
 
     public void addToChangedTiles(int position) {
@@ -48,26 +53,42 @@ public class GameBoardAdapter extends BaseAdapter {
         return 0;
     }
 
+    public void setPlayerColor(String playerColor) {
+        this.playerColor = playerColor;
+    }
+
     public View getView(int position, View convertView, ViewGroup parent) {
-        TileImageView imageView;
+        Log.i("getView", "position: " + position);
+        TileImageView imageView = null;
 
         if(convertView == null) {
+            Log.i("getView", "convertView is null");
             imageView = (TileImageView) layoutInflater.inflate(R.layout.grid_tile, null).findViewById(R.id.tile);
             imageView.setImageResource(R.drawable.square_unrevealed);
+        } else if(changedTiles.contains(position)) {
+            imageView = (TileImageView) convertView;
+            Tile tile = activity.tilesActual.get(position);
+            changedTiles.remove(Integer.valueOf(position));
+            if(tile.getMine()) { // if position is a mine
+                setFlagImage(imageView, playerColor);
+                tile.setRevealed(playerColor);
+            } else { // if position is a number/blank
+                setNumberImage(imageView, tile.getNumber());
+                tile.setRevealed();
+            }
         } else {
             imageView = (TileImageView) convertView;
+            Tile tile = activity.tilesView.get(position);
+            if(tile.getState().equals("flagged")) {
+                setFlagImage(imageView, tile.getFlagColor());
+            } else if(tile.getState().equals("unrevealed")) {
+                imageView.setImageResource(R.drawable.square_unrevealed);
+            } else {
+                setNumberImage(imageView, tile.getNumber());
+            }
+
         }
 
-        if(convertView != null && changedTiles.contains(position)) {
-            Tile tile = activity.tilesActual.get(position);
-            changedTiles.remove(position);
-            String state = tile.getState();
-            if (state.equals("revealed")) {
-                setNumberImage(imageView, tile.getNumber());
-            } else if (state.equals("flagged")) {
-                setFlagImage(imageView, tile.getFlagColor());
-            }
-        }
 
         return imageView;
     }

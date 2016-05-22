@@ -14,11 +14,14 @@ public class Tile {
     }
 
     public void setState(int number) {
-        state = "revealed";
         this.number = number;
     }
 
-    public void setState(String flagColor) {
+    public void setRevealed() {
+        state = "revealed";
+    }
+
+    public void setRevealed(String flagColor) {
         state = "flagged";
         this.flagColor = flagColor;
     }

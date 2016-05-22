@@ -1,12 +1,15 @@
 package com.vdai.minesweeperflags;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -19,7 +22,7 @@ import java.util.Random;
  */
 public class GameScreenActivity extends AppCompatActivity {
     private int DEFAULT_GRID_SIZE = 15;
-    private int DEFAULT_NUM_MINES = 51;
+    private int DEFAULT_NUM_MINES = 41;
 
     public int gridSize;
     public int totalSize;
@@ -75,7 +78,7 @@ public class GameScreenActivity extends AppCompatActivity {
     public void generateMines() {
         List<Integer> allNums = new ArrayList<>();
         for(int i = 0; i < totalSize; i++) {
-            allNums.add(new Integer(i));
+            allNums.add(Integer.valueOf(i));
         }
         Collections.shuffle(allNums);
 
@@ -94,23 +97,9 @@ public class GameScreenActivity extends AppCompatActivity {
 
             int mineCounter = 0;
 
-            int checkPosition;
-
-            checkPosition = i - gridSize - 1;
-            for(int j = checkPosition; j < checkPosition + 3; j++) {
-                if(j >= 0 && j < totalSize && tilesActual.get(j).getMine()) mineCounter++;
+            for(Integer index : findSurroundingIndices(i)) {
+                if(tilesActual.get(index).getMine()) mineCounter++;
             }
-
-            checkPosition = i + gridSize - 1;
-            for(int j = checkPosition; j < checkPosition + 3; j++) {
-                if(j >= 0 && j < totalSize && tilesActual.get(j).getMine()) mineCounter++;
-            }
-
-            checkPosition = i - 1;
-            if(checkPosition >= 0 && checkPosition < totalSize && tilesActual.get(checkPosition).getMine()) mineCounter++;
-
-            checkPosition = i + 1;
-            if(checkPosition >= 0 && checkPosition < totalSize && tilesActual.get(checkPosition).getMine()) mineCounter++;
 
             tilesActual.get(i).setState(mineCounter);
 
@@ -122,9 +111,89 @@ public class GameScreenActivity extends AppCompatActivity {
         generateNumbers();
     }
 
+    // returns a list of all the valid indices surrounding a position
+    public List<Integer> findSurroundingIndices(int position) {
+        List<Integer> indices = new ArrayList<>();
+
+        int checkPosition = position - gridSize - 1;
+        if((checkPosition + 1) % gridSize != 0) { // if it is not at the left edge of the screen
+            for(int i = 0; i < 3; i++) {
+                if(checkPosition >= 0 && checkPosition < totalSize) {
+                    indices.add(checkPosition);
+                }
+                checkPosition = checkPosition + gridSize;
+            }
+        }
+
+        checkPosition = position - gridSize + 1;
+        if(checkPosition % gridSize != 0) { // if it is not at the right edge of the screen
+            for(int i = 0; i < 3; i++) {
+                if(checkPosition >= 0 && checkPosition < totalSize) {
+                    indices.add(checkPosition);
+                }
+                checkPosition = checkPosition + gridSize;
+            }
+        }
+
+        checkPosition = position - gridSize;
+        if(checkPosition >= 0 && checkPosition < totalSize) {
+            indices.add(checkPosition);
+        }
+
+        checkPosition = position + gridSize;
+        if(checkPosition >= 0 && checkPosition < totalSize) {
+            indices.add(checkPosition);
+        }
+
+        return indices;
+    }
+
+    public List<Integer> findAdjacentIndices(int position) {
+        List<Integer> indices = new ArrayList<>();
+        int checkPosition = position - gridSize;
+        if(checkPosition >= 0 && checkPosition < totalSize) {
+            indices.add(checkPosition);
+        }
+
+        checkPosition = position + gridSize;
+        if(checkPosition >= 0 && checkPosition < totalSize) {
+            indices.add(checkPosition);
+        }
+
+        checkPosition = position - 1;
+        if(checkPosition >= 0 && checkPosition < totalSize) {
+            indices.add(checkPosition);
+        }
+
+        checkPosition = position + 1;
+        if(checkPosition >= 0 && checkPosition < totalSize) {
+            indices.add(checkPosition);
+        }
+
+        return indices;
+    }
+
+    public void revealBlankTile(int position) {
+        for(Integer index : findSurroundingIndices(position)) {
+            if(gameBoardAdapter.getChangedTiles().contains(index)) {
+                continue;
+            }
+            Tile tile = tilesActual.get(index);
+            gameBoardAdapter.addToChangedTiles(index);
+            if(!tile.getMine() && tile.getNumber() == 0) { // if tile at index is blank
+                revealBlankTile(index);
+            }
+        }
+    }
+
     public void changeTile(int position) {
         if(tilesView.get(position).getState().equals("unrevealed")) {
             gameBoardAdapter.addToChangedTiles(position);
+
+            if(!tilesView.get(position).getMine() && tilesActual.get(position).getNumber() == 0) { // if tile is blank
+                revealBlankTile(position);
+            }
+
             gameBoardAdapter.notifyDataSetChanged();
         }
     }

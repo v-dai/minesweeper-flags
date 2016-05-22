@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Minesweeper Flags</string>
+    <string name="welcome">Welcome to Minesweeper Flags!</string>
+    <string name="ai_button">Play with AI</string>
+    <string name="friend_button">Play with a friend</string>
+    <string name="settings_button">Settings</string>
+    <string name="how_to_play_button">How to play</string>
+
+    <string name="how_to_play_title">How to play:</string>
+    <string name="instructions">Instructions here</string>
 </resources>

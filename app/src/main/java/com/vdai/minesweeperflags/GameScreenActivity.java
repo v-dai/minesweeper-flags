@@ -89,13 +89,16 @@ public class GameScreenActivity extends AppCompatActivity {
         gameBoard.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                changeTile(position);
-                updateNumMines(position);
-                updateScore(position);
+                if(numMines != 0 && tilesView.get(position).getState().equals("unrevealed")) {
+                    gameBoardAdapter.setPlayerColor(thisTurn);
+                    changeTile(position);
+                    updateNumMines(position);
+                    updateScore(position);
 
-                updateTurns(position);
-                printMessage();
-                Toast.makeText(GameScreenActivity.this, "Position of click is: " + position, Toast.LENGTH_SHORT).show();
+                    updateTurns(position);
+                    printMessage();
+                }
+                //Toast.makeText(GameScreenActivity.this, "Position of click is: " + position, Toast.LENGTH_SHORT).show();
             }
         });
     }

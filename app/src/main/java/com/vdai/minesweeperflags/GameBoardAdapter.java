@@ -58,11 +58,9 @@ public class GameBoardAdapter extends BaseAdapter {
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
-        Log.i("getView", "position: " + position);
         TileImageView imageView = null;
 
         if(convertView == null) {
-            Log.i("getView", "convertView is null");
             imageView = (TileImageView) layoutInflater.inflate(R.layout.grid_tile, null).findViewById(R.id.tile);
             imageView.setImageResource(R.drawable.square_unrevealed);
         } else if(changedTiles.contains(position)) {

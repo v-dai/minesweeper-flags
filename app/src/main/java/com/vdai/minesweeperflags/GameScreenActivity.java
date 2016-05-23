@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ import java.util.Random;
  */
 public class GameScreenActivity extends AppCompatActivity {
     private int DEFAULT_GRID_SIZE = 15;
-    private int DEFAULT_NUM_MINES = 41;
+    private int DEFAULT_NUM_MINES = 31;
 
     public int gridSize;
     public int totalSize;
@@ -34,11 +35,21 @@ public class GameScreenActivity extends AppCompatActivity {
     public GridView gameBoard;
     public GameBoardAdapter gameBoardAdapter;
 
+    public TextView redScore;
+    public TextView blueScore;
+    public TextView minesLeft;
+    public TextView message;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_screen);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        minesLeft = (TextView) findViewById(R.id.mines_left);
+        redScore = (TextView) findViewById(R.id.red_score);
+        blueScore = (TextView) findViewById(R.id.blue_score);
+        message = (TextView) findViewById(R.id.message);
 
         createGrid();
     }
@@ -69,6 +80,7 @@ public class GameScreenActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 changeTile(position);
+                changeText(position);
                 Toast.makeText(GameScreenActivity.this, "Position of click is: " + position, Toast.LENGTH_SHORT).show();
             }
         });
@@ -195,6 +207,13 @@ public class GameScreenActivity extends AppCompatActivity {
             }
 
             gameBoardAdapter.notifyDataSetChanged();
+        }
+    }
+
+    public void changeText(int position) {
+        if(tilesActual.get(position).getMine()) {
+            numMines--;
+            minesLeft.setText(Integer.toString(numMines));
         }
     }
 

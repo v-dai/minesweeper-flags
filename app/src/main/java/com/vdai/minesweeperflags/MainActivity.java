@@ -20,7 +20,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void playWithFriend(View view) {
-
+        Intent intent = new Intent(this, PlayWithFriendActivity.class);
+        startActivity(intent);
     }
 
     public void settings(View view) {

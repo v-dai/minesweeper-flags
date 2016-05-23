@@ -26,6 +26,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/num_mines"
             android:id="@+id/mines_left"/>
 
     </LinearLayout>
@@ -33,7 +34,9 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/player_turn"/>
+        android:text="@string/red_starts"
+        android:id="@+id/message"
+        android:layout_gravity="center"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -43,37 +46,78 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:background="@color/red">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/red_score"/>
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/flag_red"
+                android:layout_margin="5dp"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/starting_score"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:layout_gravity="center"
+                    android:textColor="@color/black"
+                    android:text="@string/red_score"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="40sp"
+                    android:layout_gravity="center"
+                    android:textColor="@color/black"
+                    android:id="@+id/red_score"
+                    android:text="@string/starting_score"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:background="@color/blue">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/blue_score"/>
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/flag_blue"
+                android:layout_margin="5dp"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/starting_score"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:layout_gravity="center"
+                    android:textColor="@color/black"
+                    android:text="@string/blue_score"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="40sp"
+                    android:layout_gravity="center"
+                    android:textColor="@color/black"
+                    android:id="@+id/blue_score"
+                    android:text="@string/starting_score"/>
+
+            </LinearLayout>
 
         </LinearLayout>
-
 
     </LinearLayout>
 

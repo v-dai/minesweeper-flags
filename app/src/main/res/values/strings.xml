@@ -13,12 +13,18 @@
     <string name="instructions">Instructions here</string>
 
     <string name="mines_left">Mines left: </string>
+    <string name="num_mines">31</string>
     <string name="red_score">Red score: </string>
     <string name="blue_score">Blue score: </string>
     <string name="starting_score">0</string>
 
+    <string name="red_starts">Red goes first. Tap on a square!</string>
+    <string name="reds_turn">Red\'s move!</string>
+
+
     <string name="grid_size_key">size</string>
     <string name="num_mines_key">mines</string>
     <string name="ai_difficulty_key">ai</string>
+
 
 </resources>

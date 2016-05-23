@@ -4,12 +4,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.IntegerRes;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,9 +32,13 @@ public class GameScreenActivity extends AppCompatActivity {
     public int gridSize;
     public int totalSize;
     public int numMines;
+    public int redMinesFound;
+    public int blueMinesFound;
     public List<Tile> tilesView = new ArrayList<>();
     public List<Tile> tilesActual = new ArrayList<>();
     public List<Integer> mines = new ArrayList<>();
+    public String thisTurn;
+    public String prevTurn;
 
     public GridView gameBoard;
     public GameBoardAdapter gameBoardAdapter;
@@ -60,6 +68,8 @@ public class GameScreenActivity extends AppCompatActivity {
         gridSize = sharedPreferences.getInt(Integer.toString(R.string.grid_size_key), DEFAULT_GRID_SIZE);
         numMines = sharedPreferences.getInt(Integer.toString(R.string.num_mines_key), DEFAULT_NUM_MINES);
         totalSize = gridSize * gridSize;
+        thisTurn = "red";
+        prevTurn = "blue";
 
         for(int i = 0; i < totalSize; i++) {
             Tile tile = new Tile();
@@ -80,7 +90,11 @@ public class GameScreenActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 changeTile(position);
-                changeText(position);
+                updateNumMines(position);
+                updateScore(position);
+
+                updateTurns(position);
+                printMessage();
                 Toast.makeText(GameScreenActivity.this, "Position of click is: " + position, Toast.LENGTH_SHORT).show();
             }
         });
@@ -210,11 +224,74 @@ public class GameScreenActivity extends AppCompatActivity {
         }
     }
 
-    public void changeText(int position) {
+    public void updateNumMines(int position) {
         if(tilesActual.get(position).getMine()) {
             numMines--;
             minesLeft.setText(Integer.toString(numMines));
         }
     }
+
+    public void printMessage() {
+        if (numMines == 0) {
+            message.setGravity(Gravity.CENTER);
+            if (redMinesFound > blueMinesFound) {
+                message.setText(R.string.red_win);
+            } else if (redMinesFound < blueMinesFound) {
+                message.setText(R.string.blue_win);
+            } else {
+                message.setText(R.string.draw);
+            }
+
+            ((LinearLayout) findViewById(R.id.mines_info)).setVisibility(View.GONE);
+            ((Button) findViewById(R.id.play_again_button)).setVisibility(View.VISIBLE);
+            return;
+        }
+
+        if (thisTurn.equals("red")) {
+            if (prevTurn.equals("red")) {
+                message.setText(R.string.red_again);
+            } else {
+                message.setText(R.string.reds_turn);
+            }
+        } else if (thisTurn.equals("blue")) {
+            if (prevTurn.equals("blue")) {
+                message.setText(R.string.blue_again);
+            } else {
+                message.setText(R.string.blues_turn);
+            }
+        }
+    }
+
+    public void updateTurns(int position) {
+        if(tilesActual.get(position).getMine()) {
+            prevTurn = thisTurn;
+        } else {
+            if(thisTurn.equals("red")) {
+                prevTurn = "red";
+                thisTurn = "blue";
+            } else {
+                prevTurn = "blue";
+                thisTurn = "red";
+            }
+        }
+    }
+
+    public void updateScore(int position) {
+        if(tilesActual.get(position).getMine()) {
+            if(thisTurn.equals("red")) {
+                redMinesFound++;
+                redScore.setText(Integer.toString(redMinesFound));
+            } else {
+                blueMinesFound++;
+                blueScore.setText(Integer.toString(blueMinesFound));
+            }
+        }
+    }
+
+    public void playAgain(View view) {
+        finish();
+        startActivity(getIntent());
+    }
+
 
 }

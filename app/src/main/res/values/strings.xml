@@ -19,8 +19,15 @@
     <string name="starting_score">0</string>
 
     <string name="red_starts">Red goes first. Tap on a square!</string>
-    <string name="reds_turn">Red\'s move!</string>
+    <string name="reds_turn">Red\'s move.</string>
+    <string name="blues_turn">Blue\'s move.</string>
+    <string name="red_again">Red found a flag. Red\'s move again.</string>
+    <string name="blue_again">Blue found a flag. Blue\'s move again.</string>
+    <string name="red_win">Red wins!</string>
+    <string name="blue_win">Blue wins!</string>
+    <string name="draw">It\'s a draw!</string>
 
+    <string name="play_again">Play again</string>
 
     <string name="grid_size_key">size</string>
     <string name="num_mines_key">mines</string>

@@ -15,18 +15,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_weight="1"
+        android:id="@+id/mines_info"
         android:layout_gravity="bottom">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:paddingRight="4dp"
+            android:textColor="@color/black"
             android:text="@string/mines_left"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/num_mines"
+            android:textSize="18sp"
+            android:textColor="@color/black"
             android:id="@+id/mines_left"/>
 
     </LinearLayout>
@@ -36,7 +41,18 @@
         android:layout_height="wrap_content"
         android:text="@string/red_starts"
         android:id="@+id/message"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:layout_weight="1"
         android:layout_gravity="center"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/play_again_button"
+        android:onClick="playAgain"
+        android:visibility="gone"
+        android:text="@string/play_again"/>
 
     <LinearLayout
         android:layout_width="match_parent"

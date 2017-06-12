@@ -4,6 +4,7 @@ import com.vdai.minesweeperflags.Tile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import static java.lang.Math.sqrt;
 
@@ -12,7 +13,28 @@ import static java.lang.Math.sqrt;
  */
 
 public abstract class AIController {
-    public abstract int getNextClick(List<Tile> tiles);
+    public abstract int getNextClick(List<Tile> tiles, List<Tile> actual);
+
+    public int clickRandomTile(List<Tile> tiles) {
+        int numEmpty = 0;
+        for(Tile tile : tiles) {
+            if (tile.getState().equals("unrevealed")) numEmpty++;
+        }
+
+        Random rand = new Random();
+        int n = rand.nextInt(numEmpty);
+
+        for(int i = 0; i < tiles.size(); i++) {
+            if (tiles.get(i).getState().equals("unrevealed")) {
+                if (n == 0) {
+                    return i;
+                }
+                n--;
+            }
+        }
+
+        return 0;
+    }
 
     // returns a list of all the valid indices surrounding a position
     public List<Integer> findSurroundingIndices(List<Tile> tiles, int position) {

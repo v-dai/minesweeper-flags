@@ -121,7 +121,7 @@ public class GameScreenActivity extends AppCompatActivity {
 
             if (aiController != null) {
                 if (tilesActual.get(position).getMine()) {
-                    message.setText(R.string.you_again);
+                    printAIMessage(false, 0);
                     return;
                 }
                 doAITurn();
@@ -137,7 +137,7 @@ public class GameScreenActivity extends AppCompatActivity {
         gameBoardAdapter.setPlayerColor("blue");
         prevTurn = "red";
         thisTurn = "blue";
-        int position = aiController.getNextClick(tilesView);
+        int position = aiController.getNextClick(tilesView, tilesActual);
         changeTile(position);
         updateNumMines(position);
         updateScore(position);
@@ -145,20 +145,44 @@ public class GameScreenActivity extends AppCompatActivity {
         int minesFound = 0;
         while(tilesActual.get(position).getMine()) {
             minesFound++;
-            position = aiController.getNextClick(tilesView);
+            position = aiController.getNextClick(tilesView, tilesActual);
             changeTile(position);
             updateNumMines(position);
             updateScore(position);
         }
 
-        if (minesFound != 0) {
-            message.setText(String.format(getString(R.string.your_turn_after_ai), minesFound));
-        } else {
-            message.setText(R.string.your_turn_after_ai2);
-        }
+        printAIMessage(true, minesFound);
 
         prevTurn = "blue";
         thisTurn = "red";
+    }
+
+    private void printAIMessage(boolean AILastTurn, int AIMinesFound) {
+        if (numMines == 0) {
+            message.setGravity(Gravity.CENTER);
+            if (redMinesFound > blueMinesFound) {
+                message.setText(R.string.red_win);
+            } else if (redMinesFound < blueMinesFound) {
+                message.setText(R.string.blue_win);
+            } else {
+                message.setText(R.string.draw);
+            }
+
+            ((LinearLayout) findViewById(R.id.mines_info)).setVisibility(View.GONE);
+            ((Button) findViewById(R.id.play_again_button)).setVisibility(View.VISIBLE);
+            return;
+        }
+
+        if (!AILastTurn) {
+            message.setText(R.string.you_again);
+            return;
+        }
+
+        if (AIMinesFound != 0) {
+            message.setText(String.format(getString(R.string.your_turn_after_ai), AIMinesFound));
+        } else {
+            message.setText(R.string.your_turn_after_ai2);
+        }
     }
 
     // populates mines list with the indices of the tiles that have mines, in numerical order
@@ -267,6 +291,8 @@ public class GameScreenActivity extends AppCompatActivity {
             }
             Tile tile = tilesActual.get(index);
             gameBoardAdapter.addToChangedTiles(index);
+            tile.setRevealed(thisTurn);
+            tilesView.get(index).setRevealed(thisTurn);
             if(!tile.getMine() && tile.getNumber() == 0) { // if tile at index is blank
                 revealBlankTile(index);
             }
@@ -276,6 +302,8 @@ public class GameScreenActivity extends AppCompatActivity {
     public void changeTile(int position) {
         if(tilesView.get(position).getState().equals("unrevealed")) {
             gameBoardAdapter.addToChangedTiles(position);
+            tilesActual.get(position).setRevealed(thisTurn);
+            tilesView.get(position).setRevealed(thisTurn);
 
             if(!tilesView.get(position).getMine() && tilesActual.get(position).getNumber() == 0) { // if tile is blank
                 revealBlankTile(position);

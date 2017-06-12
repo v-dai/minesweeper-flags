@@ -22,8 +22,12 @@ public class Tile {
     }
 
     public void setRevealed(String flagColor) {
-        state = "flagged";
-        this.flagColor = flagColor;
+        if (mine) {
+            state = "flagged";
+            this.flagColor = flagColor;
+        } else {
+            state = "revealed";
+        }
     }
 
     public void putMine() {

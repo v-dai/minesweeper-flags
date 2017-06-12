@@ -66,13 +66,16 @@ public class GameBoardAdapter extends BaseAdapter {
         } else if(changedTiles.contains(position)) {
             imageView = (TileImageView) convertView;
             Tile tile = activity.tilesActual.get(position);
+            Tile tileImage = activity.tilesView.get(position);
             changedTiles.remove(Integer.valueOf(position));
             if(tile.getMine()) { // if position is a mine
                 setFlagImage(imageView, playerColor);
                 tile.setRevealed(playerColor);
+                tileImage.setRevealed(playerColor);
             } else { // if position is a number/blank
                 setNumberImage(imageView, tile.getNumber());
                 tile.setRevealed();
+                tileImage.setRevealed();
             }
         } else {
             imageView = (TileImageView) convertView;

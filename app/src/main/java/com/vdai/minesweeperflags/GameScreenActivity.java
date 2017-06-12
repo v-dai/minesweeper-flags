@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.IntegerRes;
+import android.support.annotation.StringDef;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
@@ -17,6 +18,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.vdai.minesweeperflags.ai.AIController;
+import com.vdai.minesweeperflags.ai.EasyAIController;
+import com.vdai.minesweeperflags.ai.RegularAIController;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -28,6 +33,7 @@ import java.util.Random;
 public class GameScreenActivity extends AppCompatActivity {
     private int DEFAULT_GRID_SIZE = 15;
     private int DEFAULT_NUM_MINES = 31;
+    private AIController aiController;
 
     public int gridSize;
     public int totalSize;
@@ -60,6 +66,18 @@ public class GameScreenActivity extends AppCompatActivity {
         message = (TextView) findViewById(R.id.message);
 
         createGrid();
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            String difficulty = extras.getString("difficulty");
+            if (difficulty.equals("easy")) {
+                aiController = new EasyAIController();
+            } else if (difficulty.equals("regular")) {
+                aiController = new RegularAIController();
+            }
+
+            message.setText(R.string.you_start);
+        }
     }
 
 
@@ -89,18 +107,58 @@ public class GameScreenActivity extends AppCompatActivity {
         gameBoard.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(numMines != 0 && tilesView.get(position).getState().equals("unrevealed")) {
-                    gameBoardAdapter.setPlayerColor(thisTurn);
-                    changeTile(position);
-                    updateNumMines(position);
-                    updateScore(position);
-
-                    updateTurns(position);
-                    printMessage();
-                }
-                //Toast.makeText(GameScreenActivity.this, "Position of click is: " + position, Toast.LENGTH_SHORT).show();
+                handleUserClick(position);
             }
         });
+    }
+
+    public void handleUserClick(int position) {
+        if(numMines != 0 && tilesView.get(position).getState().equals("unrevealed")) {
+            gameBoardAdapter.setPlayerColor(thisTurn);
+            changeTile(position);
+            updateNumMines(position);
+            updateScore(position);
+
+            if (aiController != null) {
+                if (tilesActual.get(position).getMine()) {
+                    message.setText(R.string.you_again);
+                    return;
+                }
+                doAITurn();
+            } else {
+                updateTurns(position);
+                printMessage();
+            }
+        }
+        //Toast.makeText(GameScreenActivity.this, "Position of click is: " + position, Toast.LENGTH_SHORT).show();
+    }
+
+    public void doAITurn() {
+        gameBoardAdapter.setPlayerColor("blue");
+        prevTurn = "red";
+        thisTurn = "blue";
+        int position = aiController.getNextClick(tilesView);
+        changeTile(position);
+        updateNumMines(position);
+        updateScore(position);
+
+        int minesFound = 0;
+        while(tilesActual.get(position).getMine()) {
+            minesFound++;
+            position = aiController.getNextClick(tilesView);
+            changeTile(position);
+            updateNumMines(position);
+            updateScore(position);
+        }
+
+        if (minesFound != 0) {
+            message.setText(String.format(getString(R.string.your_turn_after_ai), minesFound));
+        } else {
+            message.setText(R.string.your_turn_after_ai2);
+        }
+
+        prevTurn = "blue";
+        thisTurn = "red";
     }
 
     // populates mines list with the indices of the tiles that have mines, in numerical order

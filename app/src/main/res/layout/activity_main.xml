@@ -33,6 +33,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/ai_button"
         android:text="@string/ai_button"
         android:onClick="playWithAI"/>
 
@@ -41,7 +42,7 @@
         android:layout_height="wrap_content"
         android:text="@string/friend_button"
         android:onClick="playWithFriend"/>
-
+<!--
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -54,4 +55,5 @@
         android:text="@string/how_to_play_button"
         android:layout_gravity="bottom"
         android:onClick="howToPlay"/>
+    -->
 </LinearLayout>

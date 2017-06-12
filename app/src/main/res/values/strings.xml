@@ -27,6 +27,12 @@
     <string name="blue_win">Blue wins!</string>
     <string name="draw">It\'s a draw!</string>
 
+    <string name="you_start">You (red) go first. Tap on a square!</string>
+    <string name="your_turn">Your turn (red).</string>
+    <string name="you_again">You found a flag. Your turn again.</string>
+    <string name="your_turn_after_ai" formatted="false">The AI (blue) found %d mines. Your turn (red).</string>
+    <string name="your_turn_after_ai2">The AI (blue) found no mines. Your turn (red).</string>
+
     <string name="play_again">Play again</string>
 
     <string name="grid_size_key">size</string>
